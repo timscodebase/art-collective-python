@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -5,22 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artist Collective</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
 <body>
     <nav class="container-fluid">
         <ul>
-            <li><strong><a href="{% url 'home' %}">Artist Collective</a></strong></li>
+            <li><strong><a href="{% url 'landing:home' %}">Artist Collective</a></strong></li>
         </ul>
         <ul>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'home' %}">Gallery</a></li>
-            <li><a href="{% url 'gallery:user_image_list' %}">My Images</a></li>
-            <li><a href="{% url 'gallery:upload_image' %}">Upload Image</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'gallery:image_list' %}">Gallery</a></li>
+            <li><a href="{% url 'gallery:gallery_list' %}">Artists</a></li>
+            <li><a href="{% url 'chat:room_list' %}">Chat</a></li>
+            <li><a href="{% url 'gallery:user_image_list' user.username %}">My Images</a></li>
+            <li><a href="{% url 'gallery:upload_image' %}">Upload</a></li>
+            <li>
+                <form action="{% url 'landing:logout' %}" method="post" style="margin-bottom: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="pico-link-button">Logout</button>
+                </form>
+            </li>
             {% else %}
-            <li><a href="{% url 'home' %}">Gallery</a></li>
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            <li><a href="{% url 'gallery:image_list' %}">Gallery</a></li>
+            <li><a href="{% url 'gallery:gallery_list' %}">Artists</a></li>
+            <li><a href="{% url 'chat:room_list' %}">Chat</a></li>
+            <li><a href="{% url 'landing:login' %}">Login</a></li>
+            <li><a href="{% url 'landing:signup' %}">Sign Up</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -31,5 +43,8 @@
     <footer class="container">
         <small>Built with <a href="https://picocss.com/">Pico.css</a></small>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

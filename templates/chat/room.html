@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Chat in {{ room_name }}{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header>
+            <h2>Chat Room: {{ room_name }}</h2>
+        </header>
+        <div id="chat-log" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 1em;"></div>
+        <footer>
+            <form id="chat-form" autocomplete="off">
+                <input id="chat-message-input" type="text" placeholder="Enter message..." aria-label="Message">
+                <button id="chat-message-submit" type="submit">Send</button>
+            </form>
+        </footer>
+    </article>
+</main>
+
+<script>
+    const roomName = {{ room_name|json_script:"room-name" }};
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const chatSocket = new WebSocket(
+        protocol
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const chatLog = document.querySelector('#chat-log');
+
+        // Create a container for the message
+        const messageElement = document.createElement('div');
+
+        // Create and append the bolded username
+        const usernameElement = document.createElement('b');
+        usernameElement.textContent = data.username;
+        messageElement.appendChild(usernameElement);
+
+        // Create and append the message text
+        messageElement.appendChild(document.createTextNode(': ' + data.message));
+
+        // Append the whole message to the log
+        chatLog.appendChild(messageElement);
+
+        // Auto-scroll to the bottom
+        chatLog.scrollTop = chatLog.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-form').onsubmit = function(e) {
+        e.preventDefault();
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        if (message.trim().length > 0) { // Prevent sending empty messages
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+        return false;
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article>
+    <hgroup>
+        <h1>Confirm Deletion</h1>
+        <h2>Are you sure you want to delete "{{ image.title }}"?</h2>
+    </hgroup>
+    
+    <form method="post">
+        {% csrf_token %}
+        <p>This action cannot be undone.</p>
+        
+        <div class="grid">
+            <a href="{{ image.get_absolute_url }}" role="button" class="secondary">Cancel</a>
+            <button type="submit" class="contrast">Delete Image</button>
+        </div>
+    </form>
+</article>
+{% endblock %}

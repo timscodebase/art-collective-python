@@ -3,47 +3,44 @@
 A high-level planning document for a Proof of Concept (POC) of the online artist collective. The goal is to rapidly validate the core functionality: users can sign up, upload art, and view it in a gallery.
 
 ---
-## POC Features
+## Project Status
 
-The scope is intentionally limited to these core features:
+The initial POC goals have been met, and the codebase has undergone a significant review and refactoring phase. Several new features have also been implemented.
 
-- [ ] **User Authentication**
-  - [ ] User registration page
-  - [ ] User login / logout
-- [ ] **Image Management**
-  - [ ] A simple form for logged-in users to upload an image and give it a title.
-- [ ] **Gallery Display**
-  - [ ] A public page showing all uploaded images in a simple grid.
-  - [ ] A user-specific page showing only the art they have uploaded.
-- [ ] **Admin Interface**
-  - [ ] Use the built-in Django admin to manage users and uploads.
+### Completed POC Features
+
+-   **User Authentication**: Full user registration, login, and logout functionality is in place.
+-   **Image Management**: Authenticated users can upload images with a title via a simple form.
+-   **Gallery Display**: A main gallery page displays all images, and a user-specific gallery shows a user's own uploads.
+-   **Admin Interface**: Django's admin is configured for managing users and images.
+
+### Additional Implemented Features
+
+-   **Commenting System**: Users can add and delete their own comments on images.
+-   **Chat Rooms**: A real-time chat application where users can create and join rooms.
+-   **User Profiles**: User-specific galleries now function as profile pages, showing user info.
+-   **Standardized Thumbnails**: All gallery pages now use a 3x2 grid with 16:9 aspect ratio thumbnails.
 
 ---
 ## Deferred Features
 
-These features from the original plan are **out of scope** for the initial POC but can be added later:
+These features from the original plan remain out of scope for now:
 
-- [ ] Encrypted chat rooms
-- [ ] Sales portal and e-commerce integration
-- [ ] Advanced gallery customization (themes, sharing, paid/free)
-- [ ] Image rating, sorting, and discovery pages
+-   Advanced chat features (e.g., encryption, private messages).
+-   Sales portal and e-commerce integration.
+-   Advanced gallery customization (themes, sharing, paid/free).
+-   Image rating, sorting, and discovery pages.
 
 ---
 ## Tech Stack
 
-This stack is chosen for maximum development speed and simplicity.
-
-- **Framework:** **Django** - A "batteries-included" Python framework that provides the ORM, admin panel, and authentication system out of the box.
-- **Database:** **SQLite** - The default Django database for development. It's simple, serverless, and perfect for a POC.
-- **Image Storage:** **Local File Storage** - For the POC, images will be stored on the same server the app is running on (`/media/` directory).
-- **Frontend:** **Django Templates** - Standard server-rendered HTML. We can add a minimal CSS framework like [Pico.css](https://picocss.com/) for basic styling without writing any CSS.
+-   **Framework:** **Django**
+-   **Database:** **SQLite**
+-   **Image Storage:** **Local File Storage** (`/media/` directory).
+-   **Frontend:** **Django Templates** with **Pico.css**.
 
 ---
 ## Next Steps
 
-1.  Set up a new Django project.
-2.  Create a `gallery` app within the project.
-3.  Define the `ImageUpload` model in `models.py` (with fields for title, image, and a foreign key to the User).
-4.  Create the views and forms needed for user registration and image uploading.
-5.  Define the URL patterns in `urls.py` to route traffic to the correct views.
-6.  Build the basic HTML templates for the gallery and upload pages.
+1.  **Plan Next Feature Sprint**: Decide which "Deferred Feature" to tackle next.
+2.  **Continue Refinement**: Address any new bugs or areas for improvement as they arise.

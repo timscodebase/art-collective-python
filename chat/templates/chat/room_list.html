@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<hgroup>
+    <h1>Chat Rooms</h1>
+    <h2>Join a conversation</h2>
+</hgroup>
+<div class="grid">
+    {% for room in rooms %}
+    <a href="{% url 'chat:chat_room' room.name %}">
+        <article>
+            <h4>{{ room.name }}</h4>
+        </article>
+    </a>
+    {% empty %}
+    <p>No chat rooms have been created yet. Create one in the admin panel.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Rooms{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header><h2>Available Chat Rooms</h2></header>
+        <ul>
+            {% for room in rooms %}
+                <li><a href="{% url 'chat:chat_room' room.name %}">{{ room.name }}</a></li>
+            {% empty %}
+                <li>No chat rooms available.</li>
+            {% endfor %}
+        </ul>
+        <footer>
+            <h3>Create a New Room</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <small style="color: var(--pico-form-element-invalid-active-border-color);">{{ form.name.errors.as_text }}</small>
+                {% endif %}
+                <button type="submit" style="margin-top: 1rem;">Create Room</button>
+            </form>
+        </footer>
+    </article>
+</main>
+{% endblock %}

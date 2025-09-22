@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile_user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header>
+            <h2>{{ profile_user.username }}</h2>
+            <p>Joined: {{ profile_user.date_joined|date:"F Y" }}</p>
+            <p>Total Images: {{ page_obj.paginator.count }}</p>
+        </header>
+
+        <div class="image-grid">
+            {% for image in page_obj %}
+                <a href="{{ image.get_absolute_url }}">
+                    <figure class="thumbnail-container">
+                        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                    </figure>
+                </a>
+            {% empty %}
+                <p>This user has not uploaded any images yet.</p>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+            <nav>
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page=1">&laquo; First</a></li>
+                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+
+                    <li>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</li>
+
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </article>
+</main>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Artists{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header>
+            <h2>Artists</h2>
+            <p>A list of all artists who have uploaded images.</p>
+        </header>
+        <ul>
+            {% for artist in artists %}
+                <li><a href="{% url 'gallery:user_image_list' artist.username %}">{{ artist.username }}</a></li>
+            {% empty %}
+                <li>There are no artists with uploads yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</main>
+{% endblock %}
