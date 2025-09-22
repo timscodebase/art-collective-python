@@ -1,19 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<hgroup>
-    <h1>Image Gallery</h1>
-    <h2>A collection of amazing artworks</h2>
-</hgroup>
-
-<div class="grid">
-    {% for image in images %}
+<article>
+    <hgroup>
+        <h1>{{ image.title }}</h1>
+        <h2>Uploaded by <i>{{ image.user.username }}</i></h2>
+    </hgroup>
+    
     <figure>
         <img src="{{ image.image.url }}" alt="{{ image.title }}">
-        <figcaption>{{ image.title }}</figcaption>
     </figure>
-    {% empty %}
-    <p>No images uploaded yet.</p>
-    {% endfor %}
-</div>
+
+    <section>
+        <h3>Comments</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Post Comment</button>
+        </form>
+        <hr>
+        {% for comment in comments %}
+            <article>
+                <header>
+                    <strong>{{ comment.user.username }}</strong>
+                    <small>on {{ comment.created_at|date:"N j, Y, P" }}</small>
+                </header>
+                <p>{{ comment.text }}</p>
+            </article>
+        {% empty %}
+            <p>No comments yet. Be the first to leave one!</p>
+        {% endfor %}
+    </section>
+</article>
 {% endblock %}

@@ -9,13 +9,16 @@
 <body>
     <nav class="container-fluid">
         <ul>
-            <li><strong>Artist Collective</strong></li>
+            <li><strong><a href="{% url 'home' %}">Artist Collective</a></strong></li>
         </ul>
         <ul>
             {% if user.is_authenticated %}
+            <li><a href="{% url 'home' %}">Gallery</a></li>
+            <li><a href="{% url 'gallery:user_image_list' %}">My Images</a></li>
             <li><a href="{% url 'gallery:upload_image' %}">Upload Image</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
+            <li><a href="{% url 'home' %}">Gallery</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
             <li><a href="{% url 'signup' %}">Sign Up</a></li>
             {% endif %}
