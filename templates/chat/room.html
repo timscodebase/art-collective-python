@@ -18,8 +18,10 @@
     </article>
 </main>
 
+{{ room_name|json_script:"room-name" }}
+
 <script>
-    const roomName = {{ room_name|json_script:"room-name" }};
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const chatSocket = new WebSocket(
         protocol

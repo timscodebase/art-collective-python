@@ -1,21 +1,22 @@
 from django import forms
 from .models import ChatRoom
+from django.core.validators import RegexValidator
 
 class ChatRoomForm(forms.ModelForm):
+    name = forms.CharField(
+        label="New room name",
+        validators=[
+            RegexValidator(
+                regex=r'^[-a-zA-Z0-9_]+$',
+                message='Room names can only contain letters, numbers, hyphens, and underscores.',
+            ),
+        ],
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter a new room name',
+            'autocomplete': 'off',
+        })
+    )
+
     class Meta:
         model = ChatRoom
         fields = ['name']
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'placeholder': 'Enter a new room name',
-                'aria-label': 'New room name',
-                'autocomplete': 'off',
-            })
-        }
-
-    def clean_name(self):
-        name = self.cleaned_data.get('name')
-        # Add any custom validation here if needed, e.g., for reserved names.
-        if ' ' in name:
-            raise forms.ValidationError("Room names cannot contain spaces.")
-        return name
