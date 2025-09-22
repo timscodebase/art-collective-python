@@ -26,7 +26,15 @@ A simple checklist to track tasks for the Artist Collective POC.
 
 ## Future Ideas (Post-POC)
 
+- [ ] User should have both an email and username
+- [ ] User set, site wide, color scheme/theme dark/light/system dark (default if not set by user)
 - [ ] Explore deploying the POC to a service like PythonAnywhere or Heroku.
+- [ ] User panel
+  - [ ] Update password
+  - [ ] Update passord
+  - [ ] Change colore scheme/theme
+  - [ ] Manage photos and albums
 - [ ] Add advanced chat features (private messages, encryption).
+- [ ] Site wide refactor looking for opportunities for improved security
 - [ ] Add image rating and sorting.
 - [ ] Plan and build an e-commerce/sales portal.
