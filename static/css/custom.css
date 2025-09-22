@@ -1,3 +1,11 @@
+:root {
+    color-scheme: dark light;
+
+    --pico-primary: #ffffff;
+    --pico-primary-inverse: #000000;
+    --pico-border-radius: 0.5rem;
+}
+
 /* Add any custom styles here */
 
 .pico-link-button {
@@ -13,28 +21,29 @@
 }
 
 /* 3-column grid for galleries */
-.image-grid {
+main .image-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
 /* Container for 16:9 thumbnails */
-.thumbnail-container {
+.image-grid .thumbnail-container {
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: var(--pico-border-radius);
+    margin: 0; /* Override default figure margins */
 }
 
-.thumbnail-container img {
+.image-grid .thumbnail-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* Styling for the main image on the detail page */
-.detail-image {
+main article .detail-image {
     max-width: 100%;
     height: auto;
     display: block;
