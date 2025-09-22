@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<hgroup>
+    <h1>Image Gallery</h1>
+    <h2>A collection of amazing artworks</h2>
+</hgroup>
+
+<div class="grid">
+    {% for image in images %}
+    <figure>
+        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+        <figcaption>{{ image.title }}</figcaption>
+    </figure>
+    {% empty %}
+    <p>No images uploaded yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

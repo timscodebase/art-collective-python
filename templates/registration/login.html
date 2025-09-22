@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="grid">
+    <div>
+        <hgroup>
+            <h1>Login</h1>
+            <h2>Access your account</h2>
+        </hgroup>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</article>
+{% endblock %}
