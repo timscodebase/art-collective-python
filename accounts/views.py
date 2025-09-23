@@ -27,6 +27,19 @@ def change_username(request):
         form = ChangeUsernameForm(instance=request.user) # Pre-populate with current username
     return render(request, 'accounts/change_username.html', {'form': form})
 
+    return render(request, 'accounts/update_profile.html', {'form': form})
+
+@login_required
+def change_theme(request):
+    if request.method == 'POST':
+        form = ThemeForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:dashboard')
+    else:
+        form = ThemeForm(instance=request.user.profile)
+    return render(request, 'accounts/change_theme.html', {'form': form})
+
 @login_required
 def update_profile(request):
     if request.method == 'POST':

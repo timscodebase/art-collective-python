@@ -21,20 +21,24 @@ A simple checklist to track tasks for the Artist Collective POC.
 -   [x] Add the ability for users to delete their own comments.
 -   [x] Enhance the user gallery page into a user profile page.
 -   [x] Standardize gallery layout with a 3x2 grid and 16:9 thumbnails.
+-   [x] Implement User Panel features:
+    -   [x] Update Password
+    -   [x] Change Username
+    -   [x] Update Profile (including avatar upload)
+    -   [x] Manage Photos (list and delete own images)
+    -   [x] Change Color Scheme (light/dark theme toggle)
+-   [x] Improve UI cohesiveness across the application.
 
 ---
 
-## Next Sprint: Build the User Panel
+## Next Sprint: Image Rating and Sorting
 
--   [ ] **Update Password**: Implement functionality for users to change their password.
--   [ ] **Manage Photos and Albums**: Create an interface within the user panel to list, edit, and delete their uploaded images.
--   [ ] **Change Color Scheme/Theme**: Add a form to allow users to select a preferred color scheme or theme.
+-   [ ] Implement a system for users to rate images and sort them by popularity.
 
 ---
 
 ## Future Sprints
 
--   [ ] **Image Rating and Sorting**: Implement a system for users to rate images and sort them by popularity.
 -   [ ] **Deployment**: Prepare and deploy the application to a hosting service (e.g., Heroku, PythonAnywhere).
 
 ---

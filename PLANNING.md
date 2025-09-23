@@ -5,7 +5,7 @@ A high-level planning document for a Proof of Concept (POC) of the online artist
 ---
 ## Project Status
 
-The initial POC goals have been met, and the codebase has undergone a significant review and refactoring phase. Several new features have also been implemented.
+The initial POC goals have been met, and the codebase has undergone a significant review and refactoring phase. All features planned for the User Panel have been implemented, and the UI has been made more cohesive.
 
 ### Completed POC Features
 
@@ -18,23 +18,24 @@ The initial POC goals have been met, and the codebase has undergone a significan
 
 -   **Commenting System**: Users can add and delete their own comments on images.
 -   **Chat Rooms**: A real-time chat application where users can create and join rooms.
--   **User Profiles**: User-specific galleries now function as profile pages, showing user info.
--   **Standardized Thumbnails**: All gallery pages now use a 3x2 grid with 16:9 aspect ratio thumbnails.
+-   **User Profiles**: User-specific galleries now function as profile pages, showing user info, including avatar display.
+-   **Standardized Gallery UI**: All gallery pages use a 3x2 grid with 16:9 aspect ratio thumbnails, and overall UI elements (headers, forms) are more cohesive.
+-   **User Panel**: A centralized dashboard for users to manage their account, including:
+    -   Update Password
+    -   Change Username
+    -   Update Profile (including avatar upload)
+    -   Manage Photos (list and delete own images)
+    -   Change Color Scheme (light/dark theme toggle)
 
 ---
 ## Future Roadmap (Prioritized)
 
 Based on the project's current state, here is a recommended order for tackling future features to get the most impact and build a solid foundation:
 
-### 1. Build the User Panel
-    -   **Update Password**: Fundamental security and account management.
-    -   **Manage Photos and Albums**: Allow users to list, edit, and delete their uploaded images.
-    -   **Change Color Scheme/Theme**: Add personalization options.
-
-### 2. Add Image Rating and Sorting
+### 1. Add Image Rating and Sorting
     -   Introduce community interaction and a way to discover popular art.
 
-### 3. Deployment
+### 2. Deployment
     -   Get the project online to a service like Heroku or PythonAnywhere.
 
 ---

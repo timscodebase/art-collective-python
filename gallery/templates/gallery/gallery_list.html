@@ -11,7 +11,7 @@
         </header>
         <ul>
             {% for artist in artists %}
-                <li><a href="{% url 'gallery:user_image_list' artist.username %}">{{ artist.username }}</a></li>
+                <li><a href="{% url 'gallery:user_profile' artist.username %}">{{ artist.username }}</a></li>
             {% empty %}
                 <li>There are no artists with uploads yet.</li>
             {% endfor %}

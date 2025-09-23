@@ -21,7 +21,14 @@
             {% if user.is_authenticated %}
             <li>
                 <details role="list" dir="rtl">
-                    <summary aria-haspopup="listbox" role="link">{{ user.username }}</summary>
+                    <summary aria-haspopup="listbox" role="link">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-right: 8px; vertical-align: middle;">
+                        {% else %}
+                            <img src="/static/images/default_avatar.png" alt="Default avatar" style="width: 24px; height: 24px; border-align: middle; margin-right: 8px; vertical-align: middle;">
+                        {% endif %}
+                        {{ user.username }}
+                    </summary>
                     <ul role="listbox">
             <li><a href="{% url 'gallery:user_profile' user.username %}">My Images</a></li>
             <li><a href="{% url 'accounts:dashboard' %}">My Account</a></li>
