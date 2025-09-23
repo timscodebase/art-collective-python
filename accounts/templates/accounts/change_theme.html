@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Change Theme{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header>
+            <h2>Change Theme</h2>
+        </header>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Apply Theme</button>
+        </form>
+    </article>
+</main>
+{% endblock %}

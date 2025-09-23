@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article>
+        <header>
+            <h2>Welcome, {{ user.username }}!</h2>
+        </header>
+        <p>This is your personal dashboard. From here you can manage your account and your content.</p>
+        <ul>
+            <li><a href="{% url 'landing:password_change' %}">Change Password</a></li>
+            <li><a href="{% url 'accounts:change_username' %}">Change Username</a></li>
+            <li><a href="{% url 'accounts:update_profile' %}">Update Profile</a></li>
+            <li><a href="{% url 'accounts:manage_photos' %}">Manage Photos</a></li>
+            <li><a href="{% url 'accounts:change_theme' %}">Change Color Scheme</a></li>
+        </ul>
+    </article>
+</main>
+{% endblock %}

@@ -1,35 +1,33 @@
-# Gemini Project Context: Artist Collective (Python POC)
+# Gemini Project Context: Artist Collective
 
-This document provides the context for Gemini to assist with building a Proof of Concept (POC) for the "Artist Collective" web application. The primary goal is **speed of development** to validate the core idea.
+This document provides the context for Gemini to assist with building the "Artist Collective" web application. The project has moved beyond the initial POC phase and now includes multiple apps and a richer tech stack.
 
-## Core Objectives (Proof of Concept)
+## Core Project Components
 
-The project scope is strictly limited to the following features to ensure rapid progress:
-
-1.  **User Authentication:** Full signup, login, and logout functionality using Django's built-in system.
-2.  **Image Uploading:** A protected view where authenticated users can upload an image file and add a title.
-3.  **Simple Gallery:** A public page that displays all uploaded images in a grid.
-4.  **Admin Panel:** Leverage the built-in Django Admin for all data management (users, images).
+1.  **`landing` app**: Handles the main welcome page and user authentication (signup/login/logout).
+2.  **`gallery` app**: Manages image uploads, the main gallery slider, artist profile pages, and the commenting system.
+3.  **`chat` app**: Provides real-time chat room functionality using Django Channels.
+4.  **`site_settings` app**: A singleton model, managed via the Django Admin, to control site-wide features like the gallery slider's behavior.
 
 ## Tech Stack
 
-All code generation and assistance should strictly adhere to this stack. **Simplicity is the top priority.**
+All code generation and assistance should adhere to this stack.
 
 -   **Language:** `Python 3.11+`
--   **Framework:** `Django` (latest stable version)
--   **Database:** `SQLite` (the development default, no other database needed for the POC)
+-   **Framework:** `Django` (latest stable version) with `Channels` for real-time features.
+-   **Database:** `SQLite`
 -   **Frontend:**
     -   `Django Template Language (DTL)` for server-side rendering.
-    -   `Pico.css` for all styling. Please use its standard classes.
-    -   **Constraint:** No custom CSS, JavaScript, or frontend frameworks (like Svelte, React, etc.) should be used for this POC.
--   **Image Handling:** Django's built-in `ImageField`, configured for local media storage.
--   **Environment:** All commands and instructions should assume a standard Python `venv` virtual environment on macOS.
+    -   `Pico.css` for base styling.
+    -   `Splide.js` for the main gallery slider.
+    -   Vanilla JavaScript for WebSocket connections in the chat application.
+    -   Custom CSS for styling thumbnails and other elements.
+-   **Image Handling:** Django's built-in `ImageField` for local media storage.
+-   **Environment:** Assumes a standard Python `venv` virtual environment on macOS with **Redis** available for the Channels layer.
 
 ## Key Preferences & Rules for Gemini
 
--   **Prioritize Django's built-in features** (e.g., `AuthenticationForm`, `ModelForms`, generic Class-Based Views) to minimize custom code.
--   **Explain Django Concepts:** When providing code, please add brief explanations for Django-specific patterns or "magic."
--   **Focus on the POC:** If I ask for a feature outside the defined scope (like chat or payments), please remind me that it's a deferred goal and we should focus on the POC first.
--   **Code First:** When I ask for help with a feature, provide the complete, working code snippet first, followed by the explanation.
-
-## Initial File Structure
+-   **Prioritize Django's built-in features** where applicable, but integrate cleanly with external libraries like Splide.js.
+-   **Provide complete, full-file code snippets** when adding new features or fixing bugs to avoid confusion.
+-   **Explain Django & Channels Concepts:** When providing code for new features, add brief explanations for Django-specific patterns, especially for Channels and asynchronous code.
+-   **Adhere to the multi-app structure:** When adding new, distinct functionality, propose creating a new app for it.

@@ -15,19 +15,19 @@ def image_list(request):
     return render(request, 'gallery/image_list.html', {'page_obj': page_obj})
 
 @login_required
-def user_image_list(request, username):
+def user_profile(request, username):
     profile_user = get_object_or_404(User, username=username)
     images = Image.objects.filter(user=profile_user).order_by('-id')
     paginator = Paginator(images, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'gallery/user_profile.html', {'page_obj': page_obj, 'profile_user': profile_user})
+    return render(request, 'gallery/user_profile.html', {
+        'profile_user': profile_user,
+        'page_obj': page_obj
+    })
 
 def gallery_list(request):
-    # Get the IDs of users who have at least one image
-    user_ids_with_images = Image.objects.values_list('user_id', flat=True).distinct()
-    # Get the User objects for those IDs
-    artists = User.objects.filter(id__in=user_ids_with_images).order_by('username')
+    artists = User.objects.filter(image__isnull=False).distinct().order_by('username')
     return render(request, 'gallery/gallery_list.html', {'artists': artists})
 
 @login_required
@@ -42,7 +42,6 @@ def upload_image(request):
     else:
         form = ImageForm()
     return render(request, 'gallery/upload_image.html', {'form': form})
-
 
 @login_required
 def image_detail(request, pk):
@@ -67,7 +66,7 @@ def delete_image(request, pk):
         return HttpResponseForbidden("You are not allowed to delete this image.")
     if request.method == 'POST':
         image.delete()
-        return redirect('gallery:user_image_list', username=request.user.username)
+        return redirect('gallery:user_profile', username=request.user.username)
     return render(request, 'gallery/image_confirm_delete.html', {'image': image})
 
 @login_required
@@ -79,5 +78,4 @@ def delete_comment(request, pk):
         image_pk = comment.image.pk
         comment.delete()
         return redirect('gallery:image_detail', pk=image_pk)
-    # Redirect GET requests or show a confirmation page if desired
     return redirect('gallery:image_detail', pk=comment.image.pk)
