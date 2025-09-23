@@ -39,6 +39,7 @@ A simple checklist to track tasks for the Artist Collective POC.
 
 ## Future Sprints
 
+-   [ ] **Replace Pico CSS**: The app is fugly.  Replace the current CSS with a better more maintainable system
 -   [ ] **Deployment**: Prepare and deploy the application to a hosting service (e.g., Heroku, PythonAnywhere).
 
 ---
