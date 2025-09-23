@@ -11,4 +11,5 @@ urlpatterns = [
     path('image/<int:pk>/', views.image_detail, name='image_detail'),
     path('image/<int:pk>/delete/', views.delete_image, name='delete_image'),
     path('comment/<int:pk>/delete/', views.delete_comment, name='delete_comment'),
+    path('like/<int:pk>/', views.like_image, name='like_image'),
 ]

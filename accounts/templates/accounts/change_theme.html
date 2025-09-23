@@ -8,11 +8,47 @@
         <header>
             <h2>Change Theme</h2>
         </header>
-        <form method="post">
+        <form id="change-theme-form" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Apply Theme</button>
         </form>
     </article>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('change-theme-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const csrfToken = formData.get('csrfmiddlewaretoken');
+        const selectedThemeRadio = form.querySelector('input[name="theme"]:checked');
+        const newTheme = selectedThemeRadio ? selectedThemeRadio.value : '';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/x-www-form-urlencoded' // Correct content type
+                },
+                body: new URLSearchParams(formData) // Send as URL-encoded form data
+            });
+
+            const data = await response.json();
+
+                            if (data.success) {
+                                document.documentElement.setAttribute('data-theme', data.new_theme);
+                            } else {
+                                alert('Error updating theme: ' + JSON.stringify(data.errors));
+                            }        } catch (error) {
+            console.error('Error updating theme:', error);
+            alert('Could not update theme. Please try again.');
+        }
+    });
+</script>
 {% endblock %}

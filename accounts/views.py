@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse # New import
 from gallery.models import Image # Import the Image model
 from .forms import ChangeUsernameForm, ProfileForm, ThemeForm # New import
 
@@ -22,23 +23,15 @@ def change_username(request):
         form = ChangeUsernameForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'new_username': request.user.username})
             return redirect('accounts:dashboard') # Redirect to dashboard
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = ChangeUsernameForm(instance=request.user) # Pre-populate with current username
     return render(request, 'accounts/change_username.html', {'form': form})
-
-    return render(request, 'accounts/update_profile.html', {'form': form})
-
-@login_required
-def change_theme(request):
-    if request.method == 'POST':
-        form = ThemeForm(request.POST, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:dashboard')
-    else:
-        form = ThemeForm(instance=request.user.profile)
-    return render(request, 'accounts/change_theme.html', {'form': form})
 
 @login_required
 def update_profile(request):
@@ -54,10 +47,19 @@ def update_profile(request):
 @login_required
 def change_theme(request):
     if request.method == 'POST':
+        print(f"Incoming POST data: {request.POST}") # DEBUG
         form = ThemeForm(request.POST, instance=request.user.profile)
+        print(f"Form is valid: {form.is_valid()}") # DEBUG
+        if not form.is_valid(): # DEBUG
+            print(f"Form errors: {form.errors}") # DEBUG
         if form.is_valid():
             form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'new_theme': request.user.profile.theme})
             return redirect('accounts:dashboard')
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = ThemeForm(instance=request.user.profile)
     return render(request, 'accounts/change_theme.html', {'form': form})

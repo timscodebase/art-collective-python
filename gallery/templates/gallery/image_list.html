@@ -9,12 +9,21 @@
 
     <div class="image-grid">
         {% for image in page_obj %}
-            <a href="{{ image.get_absolute_url }}">
-                <figure class="thumbnail-container">
-                    <img src="{{ image.image.url }}" alt="{{ image.title }}">
-                </figure>
-            </a>
-        {% empty %}
+                <a href="{{ image.get_absolute_url }}">
+                    <figure class="thumbnail-container">
+                        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                    </figure>
+                    <div style="padding: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <p style="margin-bottom: 0; font-weight: bold;">{{ image.title }}</p>
+                        <form class="like-form" action="{% url 'gallery:like_image' image.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="{% if image.user_has_liked %}secondary{% else %}primary{% endif %}" style="margin-bottom: 0;" data-text-like="Like" data-text-unlike="Unlike">
+                                <span class="button-text">{% if image.user_has_liked %}Unlike{% else %}Like{% endif %}</span>
+                                (<span class="like-count">{{ image.like_count }}</span>)
+                            </button>
+                        </form>
+                    </div>
+                </a>        {% empty %}
             <p>No images have been uploaded yet.</p>
         {% endfor %}
     </div>
@@ -36,4 +45,54 @@
             </ul>
         </nav>
     {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.like-form').forEach(form => {
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const button = form.querySelector('button');
+            const buttonTextSpan = button.querySelector('.button-text');
+            const likeCountSpan = button.querySelector('.like-count');
+            const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+            const url = form.action;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}) // Send empty JSON body for POST
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                likeCountSpan.textContent = data.like_count;
+
+                if (data.liked) {
+                    button.classList.remove('primary');
+                    button.classList.add('secondary');
+                    buttonTextSpan.textContent = button.dataset.textUnlike;
+                } else {
+                    button.classList.remove('secondary');
+                    button.classList.add('primary');
+                    buttonTextSpan.textContent = button.dataset.textLike;
+                }
+
+            } catch (error) {
+                console.error('Error liking image:', error);
+                alert('Could not process like. Please try again.');
+            }
+        });
+    });
+</script>
 {% endblock %}

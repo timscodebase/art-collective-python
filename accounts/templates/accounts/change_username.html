@@ -8,11 +8,54 @@
         <header>
             <h2>Change Username</h2>
         </header>
-        <form method="post">
+        <form id="change-username-form" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Update Username</button>
         </form>
     </article>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('change-username-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const csrfToken = formData.get('csrfmiddlewaretoken');
+        const newUsername = formData.get('username');
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: newUsername })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Username updated successfully!');
+                // Optionally update username in nav bar without full reload
+                const usernameDisplay = document.querySelector('summary[role="link"]');
+                if (usernameDisplay) {
+                    // Assuming the username is the last child node or similar
+                    // This might need refinement based on exact HTML structure
+                    usernameDisplay.lastChild.textContent = data.new_username;
+                }
+            } else {
+                alert('Error updating username: ' + JSON.stringify(data.errors));
+            }
+        } catch (error) {
+            console.error('Error updating username:', error);
+            alert('Could not update username. Please try again.');
+        }
+    });
+</script>
 {% endblock %}
