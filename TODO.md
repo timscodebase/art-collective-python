@@ -33,7 +33,7 @@ A simple checklist to track tasks for the Artist Collective POC.
 
 ## Next Sprint: Image Rating and Sorting
 
--   [ ] Implement a system for users to rate images and sort them by popularity.
+-   [x] Implement a system for users to rate images and sort them by popularity.
 
 ---
 

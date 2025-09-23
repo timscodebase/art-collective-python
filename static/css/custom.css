@@ -1,50 +1,16 @@
-/* Define color variables in :root for the default (dark) theme */
-:root {
-    --page-background: #11191f;
-    --card-background: #1f2d38;
-    --text-color: #f0f0f0;
-    --link-color: #82aaff;
-}
+/* Add any custom styles here */
 
-/* Define light theme overrides */
-[data-theme="light"] {
-    --page-background: #fdfdfd;
-    --card-background: #ffffff;
-    --text-color: #11191f;
-    --link-color: #0055dd;
-}
-
-/* Apply the variables */
-body {
-    background-color: var(--page-background);
-    color: var(--text-color);
-}
-
-article, nav {
-    background-color: var(--card-background);
-}
-
-a {
-    color: var(--link-color);
-}
-
-/* A class to make a button look like a link, for use in navbars */
 .pico-link-button {
+    background: none;
     border: none;
     padding: 0;
-    margin: 0;
+    color: var(--pico-primary);
+    text-decoration: underline;
+    cursor: pointer;
     font-family: inherit;
     font-size: inherit;
-    cursor: pointer;
-    text-decoration: none !imortant;
+    text-align: left;
 }
-
-/* .pico-link-button:hover {
-    color: var(--pico-nav-link-hover-color, var(--pico-primary-hover));
-} */
-
-
-/* --- GALLERY STYLES --- */
 
 /* 3-column grid for galleries */
 main .image-grid {
@@ -59,7 +25,7 @@ main .image-grid {
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: var(--pico-border-radius);
-    margin: 0;
+    margin: 0; /* Override default figure margins */
 }
 
 .image-grid .thumbnail-container img {
@@ -75,4 +41,24 @@ main article .detail-image {
     display: block;
     margin: 1rem auto;
     border-radius: var(--pico-border-radius);
+}
+
+/* General UI cohesiveness improvements */
+main.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+main article {
+    box-shadow: var(--pico-box-shadow); /* Subtle shadow */
+    margin-bottom: 1.5rem; /* Space between articles */
+}
+
+.image-grid .thumbnail-container {
+    box-shadow: var(--pico-box-shadow); /* Subtle shadow for image cards */
+    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.image-grid .thumbnail-container:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
 }
