@@ -1,8 +1,90 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<div style="text-align: center; padding: 4rem 0;">
-    <h1>Welcome to the Artist Collective</h1>
-    <p>Discover and share amazing art from around the world.</p>
-    <a href="{% url 'gallery:image_list' %}" role="button">Explore the Gallery</a>
+<div class="hero-section" style="text-align: center; padding: var(--ac-spacing-xxl) 0;">
+    <article class="fade-in">
+        <header>
+            <h1>🎨 Welcome to Artist Collective</h1>
+        </header>
+        
+        <div style="padding: var(--ac-spacing-xl);">
+            <p style="font-size: 1.2rem; margin-bottom: var(--ac-spacing-lg); color: var(--pico-muted-color);">
+                Discover, share, and connect through amazing art from our creative community
+            </p>
+            
+            <div style="display: flex; gap: var(--ac-spacing-md); justify-content: center; flex-wrap: wrap; margin: var(--ac-spacing-xl) 0;">
+                <a href="{% url 'gallery:image_list' %}" role="button" class="slide-up">
+                    🖼️ Explore Gallery
+                </a>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'gallery:upload_image' %}" role="button" class="slide-up" style="animation-delay: 0.1s;">
+                        📤 Upload Art
+                    </a>
+                    <a href="{% url 'chat:room_list' %}" role="button" class="slide-up" style="animation-delay: 0.2s;">
+                        💬 Join Chat
+                    </a>
+                {% else %}
+                    <a href="{% url 'signup' %}" role="button" class="slide-up" style="animation-delay: 0.1s;">
+                        🚀 Join Community
+                    </a>
+                    <a href="{% url 'login' %}" role="button" class="outline slide-up" style="animation-delay: 0.2s;">
+                        🔑 Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <footer style="margin-top: var(--ac-spacing-xxl); padding-top: var(--ac-spacing-lg); border-top: 1px solid var(--pico-muted-border-color);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--ac-spacing-lg); text-align: left;">
+                <div>
+                    <h4>🎭 For Artists</h4>
+                    <p>Share your creations, get feedback, and build your portfolio in a supportive community.</p>
+                </div>
+                <div>
+                    <h4>👥 For Enthusiasts</h4>
+                    <p>Discover new artists, explore diverse styles, and connect with creative minds.</p>
+                </div>
+                <div>
+                    <h4>💡 For Everyone</h4>
+                    <p>Join discussions, participate in challenges, and be part of our growing collective.</p>
+                </div>
+            </div>
+        </footer>
+    </article>
 </div>
+
+{% if recent_images %}
+<article style="margin-top: var(--ac-spacing-xxl);">
+    <header>
+        <h2>✨ Recent Highlights</h2>
+    </header>
+    
+    <div class="image-grid">
+        {% for image in recent_images %}
+        <div class="image-card fade-in" style="animation-delay: {{ forloop.counter0|floatformat }}0ms;">
+            <a href="{{ image.get_absolute_url }}">
+                <figure class="thumbnail-container">
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}" loading="lazy">
+                </figure>
+                <div class="image-card-content">
+                    <h4 class="image-card-title">{{ image.title }}</h4>
+                    <div class="image-card-meta">
+                        <span>by {{ image.user.username }}</span>
+                        <span>🤍 {{ image.like_count }}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: var(--ac-spacing-lg);">
+        <a href="{% url 'gallery:image_list' %}" role="button" class="outline">
+            View Full Gallery →
+        </a>
+    </div>
+</article>
+{% endif %}
 {% endblock %}

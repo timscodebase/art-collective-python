@@ -7,7 +7,19 @@ from .forms import ChangeUsernameForm, ProfileForm, ThemeForm # New import
 
 @login_required
 def user_panel_dashboard(request):
-    return render(request, 'accounts/user_panel_dashboard.html', {})
+    """Enhanced dashboard with user statistics."""
+    from gallery.models import Comment, Like
+    
+    # Get user statistics
+    user_stats = {
+        'image_count': Image.objects.filter(user=request.user).count(),
+        'total_likes': Like.objects.filter(image__user=request.user).count(),
+        'comments_count': Comment.objects.filter(user=request.user).count(),
+    }
+    
+    return render(request, 'accounts/user_panel_dashboard.html', {
+        'user_stats': user_stats
+    })
 
 @login_required
 def manage_photos(request):

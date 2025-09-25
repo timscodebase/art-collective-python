@@ -1,16 +1,189 @@
 {% extends 'base.html' %}
 
+{% block title %}Upload Artwork - {{ site_name }}{% endblock %}
+
 {% block content %}
-<main class="container">
-    <article>
-        <header>
-            <h2>Upload Image</h2>
-        </header>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Upload</button>
-        </form>
-    </article>
-</main>
+<article class="fade-in">
+    <header>
+        <h2>📤 Upload Your Artwork</h2>
+        <p>Share your creativity with our community</p>
+    </header>
+    
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+        
+        <fieldset>
+            <legend>📝 Artwork Details</legend>
+            
+            <div style="margin-bottom: var(--ac-spacing-lg);">
+                {{ form.title.label_tag }}
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="alert alert-error">
+                        {{ form.title.errors.as_text }}
+                    </div>
+                {% endif %}
+                <small style="color: var(--pico-muted-color);">
+                    Give your artwork a memorable title
+                </small>
+            </div>
+            
+            <div style="margin-bottom: var(--ac-spacing-lg);">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="alert alert-error">
+                        {{ form.description.errors.as_text }}
+                    </div>
+                {% endif %}
+                <small style="color: var(--pico-muted-color);">
+                    Tell us about your artwork - inspiration, technique, etc.
+                </small>
+            </div>
+            
+            <div style="margin-bottom: var(--ac-spacing-lg);">
+                {{ form.image.label_tag }}
+                <div class="file-upload-area" style="
+                    border: 2px dashed var(--pico-muted-border-color);
+                    border-radius: var(--ac-border-radius-large);
+                    padding: var(--ac-spacing-xl);
+                    text-align: center;
+                    background: rgba(var(--pico-primary-rgb), 0.05);
+                    margin: var(--ac-spacing-sm) 0;
+                    transition: all 0.3s ease;
+                ">
+                    <div style="font-size: 3rem; margin-bottom: var(--ac-spacing-md); color: var(--pico-muted-color);">
+                        🖼️
+                    </div>
+                    {{ form.image }}
+                    <p style="margin-top: var(--ac-spacing-sm); color: var(--pico-muted-color);">
+                        Choose your image file or drag and drop here
+                    </p>
+                    <small style="color: var(--pico-muted-color);">
+                        Supports JPG, PNG, GIF up to 10MB
+                    </small>
+                </div>
+                {% if form.image.errors %}
+                    <div class="alert alert-error">
+                        {{ form.image.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+        </fieldset>
+        
+        <div style="display: flex; gap: var(--ac-spacing-md); justify-content: flex-end; margin-top: var(--ac-spacing-xl);">
+            <a href="{% url 'gallery:image_list' %}" role="button" class="outline">
+                ❌ Cancel
+            </a>
+            <button type="submit" id="upload-btn">
+                ✨ Upload Artwork
+            </button>
+        </div>
+    </form>
+</article>
+
+<style>
+.file-upload-area:hover {
+    border-color: var(--pico-primary);
+    background: rgba(var(--pico-primary-rgb), 0.1);
+}
+
+.upload-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#upload-btn.uploading {
+    background: var(--pico-muted-color);
+}
+
+#upload-btn.uploading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.upload-form');
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileUploadArea = document.querySelector('.file-upload-area');
+    
+    // Handle form submission
+    form.addEventListener('submit', function() {
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = '⏳ Uploading...';
+        uploadBtn.classList.add('uploading');
+    });
+    
+    // File drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        fileUploadArea.style.borderColor = 'var(--pico-primary)';
+        fileUploadArea.style.background = 'rgba(var(--pico-primary-rgb), 0.2)';
+    }
+
+    function unhighlight(e) {
+        fileUploadArea.style.borderColor = 'var(--pico-muted-border-color)';
+        fileUploadArea.style.background = 'rgba(var(--pico-primary-rgb), 0.05)';
+    }
+
+    fileUploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        
+        // Show file name
+        if (files.length > 0) {
+            const fileName = files[0].name;
+            const fileSize = (files[0].size / 1024 / 1024).toFixed(2);
+            fileUploadArea.querySelector('p').innerHTML = `
+                <strong>✅ ${fileName}</strong><br>
+                <small>${fileSize} MB</small>
+            `;
+        }
+    }
+    
+    // File input change handler
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const fileName = file.name;
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            fileUploadArea.querySelector('p').innerHTML = `
+                <strong>✅ ${fileName}</strong><br>
+                <small>${fileSize} MB</small>
+            `;
+        }
+    });
+});
+</script>
 {% endblock %}

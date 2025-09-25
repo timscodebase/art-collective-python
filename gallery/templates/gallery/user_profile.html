@@ -2,49 +2,76 @@
 
 {% block title %}{{ profile_user.username }}'s Profile{% endblock %}
 
-                <a href="{{ image.get_absolute_url }}">
+{% block content %}
+<article>
+    <header>
+        <h2>🎨 {{ profile_user.username }}'s Gallery</h2>
+        <p>Artwork by {{ profile_user.username }}</p>
+    </header>
+    
+    <div class="image-grid">
+        {% for image in page_obj %}
+            <div class="image-card fade-in">
+                <a href="{{ image.get_absolute_url }}" class="image-card-link">
                     <figure class="thumbnail-container">
-                        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                        <img src="{{ image.image.url }}" alt="{{ image.title }}" loading="lazy">
                     </figure>
-                    <div style="padding: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-                        <p style="margin-bottom: 0; font-weight: bold;">{{ image.title }}</p>
-                        <form class="like-form" action="{% url 'gallery:like_image' image.pk %}" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="{% if image.user_has_liked %}secondary{% else %}primary{% endif %}" style="margin-bottom: 0;" data-text-like="Like" data-text-unlike="Unlike">
-                                <span class="button-text">{% if image.user_has_liked %}Unlike{% else %}Like{% endif %}</span>
-                                (<span class="like-count">{{ image.like_count }}</span>)
-                            </button>
-                        </form>
+                    <div class="image-card-content">
+                        <h3 class="image-card-title">{{ image.title }}</h3>
+                        <div class="image-card-meta">
+                            <span>by {{ image.user.username }}</span>
+                            <div class="image-card-actions">
+                                {% if user.is_authenticated %}
+                                <form class="like-form" action="{% url 'gallery:like_image' image.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" 
+                                            class="{% if image.user_has_liked %}secondary{% else %}outline{% endif %}" 
+                                            data-image-id="{{ image.pk }}"
+                                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                        <span class="button-text">{% if image.user_has_liked %}❤️{% else %}🤍{% endif %}</span>
+                                        <span class="like-count">{{ image.like_count }}</span>
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="like-display">🤍 {{ image.like_count }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </a>
-            {% empty %}
-                <p>This user has not uploaded any images yet.</p>
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <h3>🎭 No Artwork Yet</h3>
+                <p>{{ profile_user.username }} hasn't uploaded any artwork yet.</p>
+            </div>
+        {% endfor %}
+    </div>
 
-        {% if page_obj.has_other_pages %}
-            <nav>
-                <ul>
-                    {% if page_obj.has_previous %}
-                        <li><a href="?page=1">&laquo; First</a></li>
-                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                    {% endif %}
+    {% if page_obj.has_other_pages %}
+        <nav class="pagination" aria-label="Gallery pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" aria-label="Go to first page">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" aria-label="Go to previous page">‹ Previous</a>
+            {% endif %}
 
-                    <li>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</li>
+            <span class="current" aria-current="page">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
 
-                    {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
-    </article>
-</main>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" aria-label="Go to next page">Next ›</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" aria-label="Go to last page">Last &raquo;</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</article>
 {% endblock %}
 
 {% block scripts %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced like functionality with better UX
     document.querySelectorAll('.like-form').forEach(form => {
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -55,6 +82,10 @@
             const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
             const url = form.action;
 
+            // Add loading state
+            button.classList.add('button-loading');
+            button.disabled = true;
+
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -63,7 +94,7 @@
                         'X-CSRFToken': csrfToken,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({}) // Send empty JSON body for POST
+                    body: JSON.stringify({})
                 });
 
                 if (!response.ok) {
@@ -72,23 +103,48 @@
 
                 const data = await response.json();
 
+                // Update UI
                 likeCountSpan.textContent = data.like_count;
 
                 if (data.liked) {
-                    button.classList.remove('primary');
+                    button.classList.remove('outline');
                     button.classList.add('secondary');
-                    buttonTextSpan.textContent = button.dataset.textUnlike;
+                    buttonTextSpan.textContent = '❤️';
                 } else {
                     button.classList.remove('secondary');
-                    button.classList.add('primary');
-                    buttonTextSpan.textContent = button.dataset.textLike;
+                    button.classList.add('outline');
+                    buttonTextSpan.textContent = '🤍';
                 }
+
+                // Brief success animation
+                button.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
 
             } catch (error) {
                 console.error('Error liking image:', error);
-                alert('Could not process like. Please try again.');
+                
+                // Show user-friendly error
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-error';
+                errorDiv.innerHTML = '❌ Could not process like. Please try again.';
+                form.parentElement.appendChild(errorDiv);
+                
+                setTimeout(() => errorDiv.remove(), 3000);
+            } finally {
+                // Remove loading state
+                button.classList.remove('button-loading');
+                button.disabled = false;
             }
         });
     });
+
+    // Add staggered animation to image cards
+    const cards = document.querySelectorAll('.image-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+});
 </script>
 {% endblock %}

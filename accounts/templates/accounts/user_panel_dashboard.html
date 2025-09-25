@@ -1,21 +1,97 @@
 {% extends "base.html" %}
 
-{% block title %}User Dashboard{% endblock %}
+{% block title %}User Dashboard - {{ site_name }}{% endblock %}
 
 {% block content %}
-<main class="container">
-    <article>
-        <header>
-            <h2>Welcome, {{ user.username }}!</h2>
-        </header>
-        <p>This is your personal dashboard. From here you can manage your account and your content.</p>
-        <ul>
-            <li><a href="{% url 'landing:password_change' %}">Change Password</a></li>
-            <li><a href="{% url 'accounts:change_username' %}">Change Username</a></li>
-            <li><a href="{% url 'accounts:update_profile' %}">Update Profile</a></li>
-            <li><a href="{% url 'accounts:manage_photos' %}">Manage Photos</a></li>
-            <li><a href="{% url 'accounts:change_theme' %}">Change Color Scheme</a></li>
-        </ul>
-    </article>
-</main>
+<article class="fade-in">
+    <header>
+        <h2>👋 Welcome back, {{ user.username }}!</h2>
+    </header>
+    
+    <div style="padding: var(--ac-spacing-lg);">
+        <p style="font-size: 1.1rem; margin-bottom: var(--ac-spacing-xl); color: var(--pico-muted-color);">
+            Manage your account, photos, and settings from your personal dashboard.
+        </p>
+        
+        <!-- Quick Actions Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--ac-spacing-lg); margin: var(--ac-spacing-xl) 0;">
+            
+            <!-- Account Management -->
+            <div style="background: var(--pico-card-background-color); padding: var(--ac-spacing-lg); border-radius: var(--ac-border-radius-large); box-shadow: var(--ac-shadow-light);">
+                <h3>👤 Account Settings</h3>
+                <p style="color: var(--pico-muted-color); margin-bottom: var(--ac-spacing-md);">
+                    Update your personal information and security settings.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: var(--ac-spacing-sm);">
+                    <a href="{% url 'accounts:change_username' %}" role="button" class="outline">
+                        ✏️ Change Username
+                    </a>
+                    <a href="{% url 'accounts:update_profile' %}" role="button" class="outline">
+                        📝 Update Profile
+                    </a>
+                    <a href="{% url 'password_change' %}" role="button" class="outline">
+                        🔐 Change Password
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Photo Management -->
+            <div style="background: var(--pico-card-background-color); padding: var(--ac-spacing-lg); border-radius: var(--ac-border-radius-large); box-shadow: var(--ac-shadow-light);">
+                <h3>🖼️ Your Artwork</h3>
+                <p style="color: var(--pico-muted-color); margin-bottom: var(--ac-spacing-md);">
+                    Manage your uploaded images and create new posts.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: var(--ac-spacing-sm);">
+                    <a href="{% url 'gallery:upload_image' %}" role="button">
+                        📤 Upload New Image
+                    </a>
+                    <a href="{% url 'accounts:manage_photos' %}" role="button" class="outline">
+                        📂 Manage Photos
+                    </a>
+                    <a href="{% url 'gallery:user_profile' user.username %}" role="button" class="outline">
+                        👁️ View My Gallery
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Community & Settings -->
+            <div style="background: var(--pico-card-background-color); padding: var(--ac-spacing-lg); border-radius: var(--ac-border-radius-large); box-shadow: var(--ac-shadow-light);">
+                <h3>🎨 Community & Settings</h3>
+                <p style="color: var(--pico-muted-color); margin-bottom: var(--ac-spacing-md);">
+                    Customize your experience and connect with others.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: var(--ac-spacing-sm);">
+                    <a href="{% url 'accounts:change_theme' %}" role="button" class="outline">
+                        🎭 Change Theme
+                    </a>
+                    <a href="{% url 'chat:room_list' %}" role="button" class="outline">
+                        💬 Join Chat Rooms
+                    </a>
+                    <a href="{% url 'gallery:image_list' %}" role="button" class="outline">
+                        🌟 Explore Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div style="background: var(--pico-card-background-color); padding: var(--ac-spacing-lg); border-radius: var(--ac-border-radius-large); box-shadow: var(--ac-shadow-light); margin-top: var(--ac-spacing-xl);">
+            <h3>📊 Your Activity</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--ac-spacing-md); margin-top: var(--ac-spacing-md);">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--pico-primary);">{{ user_stats.image_count|default:0 }}</div>
+                    <div style="color: var(--pico-muted-color);">Images Uploaded</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--pico-primary);">{{ user_stats.total_likes|default:0 }}</div>
+                    <div style="color: var(--pico-muted-color);">Total Likes</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--pico-primary);">{{ user_stats.comments_count|default:0 }}</div>
+                    <div style="color: var(--pico-muted-color);">Comments Made</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
 {% endblock %}

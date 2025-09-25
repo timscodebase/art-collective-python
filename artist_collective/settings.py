@@ -1,4 +1,4 @@
-# artist_collective/settings.py
+# art-collective-python/artist_collective/settings.py
 
 from pathlib import Path
 
@@ -45,6 +45,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "artist_collective.context_processors.breadcrumb_context",
+                "artist_collective.context_processors.site_context",
             ],
         },
     },
@@ -52,6 +54,7 @@ TEMPLATES = [
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -62,3 +65,10 @@ LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGIN_URL = 'landing:login'
 
 ASGI_APPLICATION = "artist_collective.asgi.application"
+
+# This setting is REQUIRED for Django Channels to work correctly.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}

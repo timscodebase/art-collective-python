@@ -1,0 +1,16 @@
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} fade-in" role="alert">
+        <strong>
+            {% if message.tags == 'error' %}❌ Error: 
+            {% elif message.tags == 'success' %}✅ Success: 
+            {% elif message.tags == 'warning' %}⚠️ Warning: 
+            {% elif message.tags == 'info' %}ℹ️ Info: 
+            {% endif %}
+        </strong>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

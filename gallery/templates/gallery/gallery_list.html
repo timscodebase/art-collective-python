@@ -1,21 +1,73 @@
 {% extends "base.html" %}
 
-{% block title %}Artists{% endblock %}
+{% block title %}Artists - {{ site_name }}{% endblock %}
 
 {% block content %}
-<main class="container">
-    <article>
-        <header>
-            <h2>Artists</h2>
-            <p>A list of all artists who have uploaded images.</p>
-        </header>
-        <ul>
-            {% for artist in artists %}
-                <li><a href="{% url 'gallery:user_profile' artist.username %}">{{ artist.username }}</a></li>
-            {% empty %}
-                <li>There are no artists with uploads yet.</li>
-            {% endfor %}
-        </ul>
-    </article>
-</main>
+<article>
+    <header>
+        <h2>👨‍🎨 Our Artists</h2>
+        <p>Meet the creative minds behind our amazing artwork collection</p>
+    </header>
+    
+    <div class="image-grid">
+        {% for artist in artists %}
+        <div class="image-card fade-in" style="animation-delay: {{ forloop.counter0|floatformat }}00ms;">
+            <a href="{% url 'gallery:user_profile' artist.username %}">
+                <div class="artist-card-header" style="padding: var(--ac-spacing-lg); text-align: center; background: var(--ac-primary-gradient); color: white;">
+                    {% if artist.profile.avatar %}
+                        <img src="{{ artist.profile.avatar.url }}" 
+                             alt="{{ artist.username }}'s avatar" 
+                             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: var(--ac-spacing-md); border: 3px solid white;">
+                    {% else %}
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--ac-spacing-md); font-size: 2rem;">
+                            🎨
+                        </div>
+                    {% endif %}
+                    <h3 style="margin: 0; color: white;">{{ artist.username }}</h3>
+                </div>
+                
+                <div class="image-card-content">
+                    <div class="image-card-meta">
+                        <span>📸 {{ artist.image_count }} images</span>
+                        <span>❤️ {{ artist.total_likes }} likes</span>
+                    </div>
+                    
+                    {% if artist.bio %}
+                        <p style="margin-top: var(--ac-spacing-sm); color: var(--pico-muted-color); font-size: 0.9rem;">
+                            {{ artist.bio|truncatewords:15 }}
+                        </p>
+                    {% endif %}
+                    
+                    <div style="margin-top: var(--ac-spacing-md);">
+                        <small style="color: var(--pico-muted-color);">
+                            Joined {{ artist.date_joined|date:"M Y" }}
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <h3>🎭 No Artists Yet</h3>
+            <p>Be the first to join our creative community!</p>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'signup' %}" role="button">Join as an Artist</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if artists %}
+    <div style="text-align: center; margin-top: var(--ac-spacing-xl); padding-top: var(--ac-spacing-lg); border-top: 1px solid var(--pico-muted-border-color);">
+        <p style="color: var(--pico-muted-color); margin-bottom: var(--ac-spacing-md);">
+            Want to showcase your art too?
+        </p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'gallery:upload_image' %}" role="button">Upload Your First Image</a>
+        {% else %}
+            <a href="{% url 'signup' %}" role="button">Join Our Community</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</article>
 {% endblock %}

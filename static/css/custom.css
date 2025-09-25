@@ -1,5 +1,158 @@
-/* Add any custom styles here */
+/* Artist Collective - Custom Design System */
 
+/* =================================
+   Design System Variables
+   ================================= */
+:root {
+    --ac-primary-gradient: linear-gradient(135deg, var(--pico-primary) 0%, var(--pico-secondary) 100%);
+    --ac-shadow-light: 0 2px 8px rgba(0,0,0,0.1);
+    --ac-shadow-medium: 0 4px 16px rgba(0,0,0,0.15);
+    --ac-shadow-heavy: 0 8px 24px rgba(0,0,0,0.2);
+    --ac-border-radius-small: 4px;
+    --ac-border-radius-medium: 8px;
+    --ac-border-radius-large: 12px;
+    --ac-spacing-xs: 0.25rem;
+    --ac-spacing-sm: 0.5rem;
+    --ac-spacing-md: 1rem;
+    --ac-spacing-lg: 1.5rem;
+    --ac-spacing-xl: 2rem;
+    --ac-spacing-xxl: 3rem;
+}
+
+/* =================================
+   Base Layout & Typography
+   ================================= */
+body {
+    background: var(--pico-background-color);
+}
+
+main.container {
+    padding-top: var(--ac-spacing-xl);
+    padding-bottom: var(--ac-spacing-xl);
+    min-height: calc(100vh - 200px);
+}
+
+/* Enhanced headings */
+h1, h2, h3, h4 {
+    position: relative;
+}
+
+h1::after, h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--ac-primary-gradient);
+    border-radius: 2px;
+}
+
+/* =================================
+   Navigation Improvements
+   ================================= */
+nav.container-fluid {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--pico-muted-border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul li a {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--pico-primary);
+    transform: translateY(-1px);
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--ac-primary-gradient);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* =================================
+   Breadcrumb Navigation
+   ================================= */
+.breadcrumb {
+    margin-bottom: var(--ac-spacing-lg);
+    padding: var(--ac-spacing-sm) 0;
+    border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.breadcrumb nav {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--pico-muted-color);
+}
+
+.breadcrumb a {
+    color: var(--pico-primary);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb .separator {
+    margin: 0 var(--ac-spacing-sm);
+    color: var(--pico-muted-color);
+}
+
+/* =================================
+   Cards & Articles
+   ================================= */
+article {
+    background: var(--pico-card-background-color);
+    border-radius: var(--ac-border-radius-large);
+    box-shadow: var(--ac-shadow-light);
+    margin-bottom: var(--ac-spacing-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+article:hover {
+    box-shadow: var(--ac-shadow-medium);
+    transform: translateY(-2px);
+}
+
+article header {
+    background: var(--ac-primary-gradient);
+    color: white;
+    margin: 0;
+    padding: var(--ac-spacing-lg);
+}
+
+article header h1,
+article header h2,
+article header h3 {
+    margin: 0;
+    color: white;
+}
+
+article header::after {
+    display: none; /* Remove the underline for gradient headers */
+}
+
+/* =================================
+   Button System
+   ================================= */
 .pico-link-button {
     background: none;
     border: none;
@@ -10,55 +163,603 @@
     font-family: inherit;
     font-size: inherit;
     text-align: left;
+    transition: all 0.3s ease;
 }
 
-/* 3-column grid for galleries */
-main .image-grid {
+.pico-link-button:hover {
+    color: var(--pico-secondary);
+}
+
+button, .button, [role="button"] {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+button:hover, .button:hover, [role="button"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ac-shadow-medium);
+}
+
+/* Button loading state */
+.button-loading {
+    color: transparent !important;
+}
+
+.button-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =================================
+   Gallery & Image Grid System
+   ================================= */
+.image-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--ac-spacing-lg);
+    margin: var(--ac-spacing-xl) 0;
 }
 
-/* Container for 16:9 thumbnails */
-.image-grid .thumbnail-container {
+.image-card {
+    background: var(--pico-card-background-color);
+    border-radius: var(--ac-border-radius-large);
+    overflow: hidden;
+    box-shadow: var(--ac-shadow-light);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.image-card:hover {
+    box-shadow: var(--ac-shadow-heavy);
+    transform: translateY(-4px);
+    text-decoration: none;
+}
+
+.thumbnail-container {
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    border-radius: var(--pico-border-radius);
-    margin: 0; /* Override default figure margins */
+    margin: 0;
+    position: relative;
 }
 
-.image-grid .thumbnail-container img {
+.thumbnail-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-/* Styling for the main image on the detail page */
-main article .detail-image {
+.image-card:hover .thumbnail-container img {
+    transform: scale(1.05);
+}
+
+.image-card-content {
+    padding: var(--ac-spacing-md);
+}
+
+.image-card-title {
+    margin: 0 0 var(--ac-spacing-sm) 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.image-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--ac-spacing-sm);
+    font-size: 0.9rem;
+    color: var(--pico-muted-color);
+}
+
+.image-card-actions {
+    display: flex;
+    gap: var(--ac-spacing-sm);
+    align-items: center;
+}
+
+/* =================================
+   Detail Image Styling
+   ================================= */
+.detail-image {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 1rem auto;
-    border-radius: var(--pico-border-radius);
+    margin: var(--ac-spacing-lg) auto;
+    border-radius: var(--ac-border-radius-large);
+    box-shadow: var(--ac-shadow-medium);
 }
 
-/* General UI cohesiveness improvements */
-main.container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+/* =================================
+   Form Enhancements
+   ================================= */
+form {
+    background: var(--pico-card-background-color);
+    padding: var(--ac-spacing-xl);
+    border-radius: var(--ac-border-radius-large);
+    box-shadow: var(--ac-shadow-light);
+    margin: var(--ac-spacing-lg) 0;
 }
 
-main article {
-    box-shadow: var(--pico-box-shadow); /* Subtle shadow */
-    margin-bottom: 1.5rem; /* Space between articles */
+fieldset {
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: var(--ac-border-radius-medium);
+    padding: var(--ac-spacing-lg);
+    margin: var(--ac-spacing-md) 0;
 }
 
-.image-grid .thumbnail-container {
-    box-shadow: var(--pico-box-shadow); /* Subtle shadow for image cards */
-    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+legend {
+    padding: 0 var(--ac-spacing-sm);
+    font-weight: 600;
+    color: var(--pico-primary);
 }
 
-.image-grid .thumbnail-container:hover {
-    transform: translateY(-3px); /* Lift effect on hover */
+/* =================================
+   Notification & Alert System
+   ================================= */
+.alert {
+    padding: var(--ac-spacing-md) var(--ac-spacing-lg);
+    border-radius: var(--ac-border-radius-medium);
+    margin: var(--ac-spacing-md) 0;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left-color: #28a745;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left-color: #dc3545;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: #ffc107;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    border-left-color: #17a2b8;
+    color: #0c5460;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================================
+   Pagination Enhancement
+   ================================= */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--ac-spacing-xxl) 0;
+    gap: var(--ac-spacing-sm);
+}
+
+.pagination a,
+.pagination span {
+    padding: var(--ac-spacing-sm) var(--ac-spacing-md);
+    border-radius: var(--ac-border-radius-medium);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background: var(--pico-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.pagination .current {
+    background: var(--ac-primary-gradient);
+    color: white;
+    font-weight: 600;
+}
+
+/* =================================
+   Loading & State Indicators
+   ================================= */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* =================================
+   Responsive Design
+   ================================= */
+@media (max-width: 768px) {
+    .image-grid {
+        grid-template-columns: 1fr;
+        gap: var(--ac-spacing-md);
+    }
+    
+    main.container {
+        padding-top: var(--ac-spacing-lg);
+        padding-bottom: var(--ac-spacing-lg);
+    }
+    
+    nav.container-fluid {
+        position: static;
+    }
+    
+    article header {
+        padding: var(--ac-spacing-md);
+    }
+}
+
+/* =================================
+   Accessibility Enhancements
+   ================================= */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus indicators */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 3px solid var(--pico-primary);
+    outline-offset: 2px;
+}
+
+/* =================================
+   Empty States & Placeholders
+   ================================= */
+.empty-state {
+    text-align: center;
+    padding: var(--ac-spacing-xxl);
+    color: var(--pico-muted-color);
+    grid-column: 1 / -1; /* Span full width in grid */
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--ac-spacing-md);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: var(--ac-spacing-lg);
+}
+
+/* =================================
+   Hero Section
+   ================================= */
+.hero-section {
+    background: linear-gradient(135deg, 
+        rgba(var(--pico-primary-rgb), 0.1) 0%, 
+        rgba(var(--pico-secondary-rgb), 0.05) 100%);
+    border-radius: var(--ac-border-radius-large);
+    margin-bottom: var(--ac-spacing-xl);
+}
+
+.hero-section article {
+    background: transparent;
+    box-shadow: none;
+}
+
+.hero-section article header {
+    background: transparent;
+    color: var(--pico-color);
+    text-align: center;
+}
+
+/* =================================
+   Statistics Display
+   ================================= */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--ac-spacing-md);
+    margin: var(--ac-spacing-lg) 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: var(--ac-spacing-md);
+    background: rgba(var(--pico-primary-rgb), 0.1);
+    border-radius: var(--ac-border-radius-medium);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--pico-primary);
+    display: block;
+}
+
+.stat-label {
+    color: var(--pico-muted-color);
+    font-size: 0.9rem;
+    margin-top: var(--ac-spacing-xs);
+}
+
+/* =================================
+   Enhanced Navigation Active States
+   ================================= */
+nav ul li a.active,
+nav ul li a[aria-current="page"] {
+    color: var(--pico-primary);
+    font-weight: 600;
+}
+
+nav ul li a.active::after,
+nav ul li a[aria-current="page"]::after {
+    width: 100%;
+}
+
+/* =================================
+   Avatar Dropdown Enhancements
+   ================================= */
+nav details[role="list"] {
+    margin: 0;
+}
+
+nav details[role="list"] summary {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--ac-border-radius-medium);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+nav details[role="list"] summary:hover {
+    background: rgba(var(--pico-primary-rgb), 0.1);
+    border-color: var(--pico-primary);
+}
+
+nav details[role="list"][open] summary {
+    background: rgba(var(--pico-primary-rgb), 0.1);
+    border-color: var(--pico-primary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+nav details[role="list"] ul[role="listbox"] {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-primary);
+    border-top: none;
+    border-radius: var(--ac-border-radius-medium);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    box-shadow: var(--ac-shadow-medium);
+    min-width: 180px;
+    z-index: 999;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+nav details[role="list"] ul[role="listbox"] li {
+    margin: 0;
+    padding: 0;
+}
+
+nav details[role="list"] ul[role="listbox"] li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--pico-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+nav details[role="list"] ul[role="listbox"] li a:hover {
+    background: var(--pico-primary);
+    color: white;
+    transform: none;
+}
+
+nav details[role="list"] ul[role="listbox"] li a::after {
+    display: none;
+}
+
+nav details[role="list"] ul[role="listbox"] li form {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+nav details[role="list"] ul[role="listbox"] li form .pico-link-button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    color: var(--pico-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+nav details[role="list"] ul[role="listbox"] li form .pico-link-button:hover {
+    background: var(--pico-primary);
+    color: white;
+}
+
+.avatar-image {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+nav details[role="list"]:hover .avatar-image,
+nav details[role="list"][open] .avatar-image {
+    border-color: var(--pico-primary);
+}
+
+/* =================================
+   Improved Footer
+   ================================= */
+footer.container {
+    margin-top: var(--ac-spacing-xxl);
+    padding-top: var(--ac-spacing-xl);
+    border-top: 2px solid var(--pico-muted-border-color);
+    text-align: center;
+    color: var(--pico-muted-color);
+}
+
+footer.container::before {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: var(--ac-primary-gradient);
+    margin: 0 auto var(--ac-spacing-lg) auto;
+    border-radius: 2px;
+}
+
+/* =================================
+   Theme-specific Enhancements
+   ================================= */
+[data-theme="dark"] {
+    --ac-shadow-light: 0 2px 8px rgba(0,0,0,0.3);
+    --ac-shadow-medium: 0 4px 16px rgba(0,0,0,0.4);
+    --ac-shadow-heavy: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] nav.container-fluid {
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, 
+        rgba(var(--pico-primary-rgb), 0.2) 0%, 
+        rgba(var(--pico-secondary-rgb), 0.1) 100%);
+}
+
+/* Dark mode dropdown adjustments */
+[data-theme="dark"] nav details[role="list"] summary:hover {
+    background: rgba(var(--pico-primary-rgb), 0.2);
+}
+
+[data-theme="dark"] nav details[role="list"][open] summary {
+    background: rgba(var(--pico-primary-rgb), 0.2);
+}
+
+[data-theme="dark"] nav details[role="list"] ul[role="listbox"] {
+    background: var(--pico-card-background-color);
+    border-color: rgba(var(--pico-primary-rgb), 0.3);
+}
+
+[data-theme="dark"] nav details[role="list"] ul[role="listbox"] li a:hover,
+[data-theme="dark"] nav details[role="list"] ul[role="listbox"] li form .pico-link-button:hover {
+    background: var(--pico-primary);
+}
+
+/* =================================
+   Mobile Enhancements
+   ================================= */
+@media (max-width: 576px) {
+    .hero-section {
+        margin: var(--ac-spacing-md) -1rem;
+        border-radius: 0;
+    }
+    
+    .image-card-content {
+        padding: var(--ac-spacing-sm);
+    }
+    
+    .image-card-title {
+        font-size: 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    nav ul li {
+        font-size: 0.9rem;
+    }
+    
+    /* Mobile dropdown adjustments */
+    nav details[role="list"] ul[role="listbox"] {
+        right: -1rem;
+        left: -1rem;
+        min-width: auto;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    nav details[role="list"] summary {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .avatar-image {
+        width: 20px;
+        height: 20px;
+        margin-right: 6px;
+    }
 }
